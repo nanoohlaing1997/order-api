@@ -29,6 +29,9 @@ func RegisterRoute() *mux.Router {
 	// Registering 3 APIs
 	router.HandleFunc("/orders", controller.CreateOrder).Methods("POST")
 	router.HandleFunc("/orders/{id}", controller.TakeOrder).Methods("PATCH")
+	router.HandleFunc("/orders", controller.ListOrder).
+		Queries("page", "{page}", "limit", "{limit}").
+		Methods("GET")
 
 	return router
 }

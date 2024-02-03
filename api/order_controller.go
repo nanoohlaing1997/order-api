@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/nanoohlaing1997/order-api/database"
@@ -107,4 +108,40 @@ func (c *Controller) TakeOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(TakeOrderRequestAndResponse{Status: "SUCCESS"})
+}
+
+func (c *Controller) ListOrder(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	page, err := strconv.Atoi(vars["page"])
+	if err != nil {
+		returnError(w, "Page must be valid integer", http.StatusNotAcceptable)
+		return
+	}
+
+	limit, err := strconv.Atoi(vars["limit"])
+	if err != nil {
+		returnError(w, "Limit must be valid integer", http.StatusNotAcceptable)
+		return
+	}
+
+	if page < 0 || limit < 0 {
+		returnError(w, "Page and limit must be positive integer", http.StatusNotAcceptable)
+		return
+	}
+
+	if page == 0 {
+		page = 1
+	}
+
+	if limit == 0 {
+		limit = 1
+	}
+
+	orders, err := c.dbm.ListOrder(page, limit)
+	if err != nil {
+		returnError(w, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	json.NewEncoder(w).Encode(orders)
 }

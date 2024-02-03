@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+
+	"github.com/nanoohlaing1997/order-api/database"
 )
 
 type CreateOrderRequest struct {
@@ -19,6 +21,10 @@ type CreateOrderResponse struct {
 
 type TakeOrderRequestAndResponse struct {
 	Status string `json:"status"`
+}
+
+type ListOrderResponse struct {
+	Orders []*database.Order
 }
 
 type ErrorResponse struct {

@@ -31,7 +31,7 @@ func GetDistance(origin, destination []string) (float64, error) {
 					"elements": []interface{}{
 						map[string]interface{}{
 							"distance": map[string]interface{}{
-								"value": 123532510103434.35321,
+								"value": 1235325101,
 							},
 						},
 					},

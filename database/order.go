@@ -53,14 +53,24 @@ func (odb *OrderDB) TakeOrder(orderID uint64, status string) error {
 	}
 
 	order.Status = status
-	if err := tx.Save(&order).Error; err != nil {
+	if res := tx.Save(&order); res.Error != nil {
 		tx.Rollback()
-		return err
+		return res.Error
 	}
 
-	if err := tx.Commit().Error; err != nil {
-		return err
+	if res := tx.Commit(); res.Error != nil {
+		return res.Error
 	}
 
 	return nil
+}
+
+func (odb *OrderDB) ListOrder(page, limit int) ([]*Order, error) {
+	orders := make([]*Order, 0)
+	offsetPage := (page - 1) * limit
+	if res := odb.db.Offset(offsetPage).Limit(limit).Find(&orders); res.Error != nil {
+		return nil, res.Error
+	}
+
+	return orders, nil
 }
