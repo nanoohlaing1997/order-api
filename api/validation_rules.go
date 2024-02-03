@@ -17,6 +17,10 @@ type CreateOrderResponse struct {
 	Status   string  `json:"status"`
 }
 
+type TakeOrderRequestAndResponse struct {
+	Status string `json:"status"`
+}
+
 type ErrorResponse struct {
 	Message string `json:"error"`
 }

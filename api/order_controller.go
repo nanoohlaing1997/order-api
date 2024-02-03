@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/nanoohlaing1997/order-api/database"
 	"github.com/nanoohlaing1997/order-api/service"
 )
@@ -74,4 +75,36 @@ func (c *Controller) CreateOrder(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *Controller) TakeOrder(w http.ResponseWriter, r *http.Request) {
+	// Validate URL parameter is valid or not
+	vars := mux.Vars(r)
+	stringOrderID := vars["id"]
+	orderID, _ := service.StringToUint64(stringOrderID)
+	if orderID <= 0 {
+		returnError(w, "Invalid order ID", http.StatusBadRequest)
+		return
+	}
+
+	// Validate the json body request
+	var reqBody TakeOrderRequestAndResponse
+	if err := json.NewDecoder(r.Body).Decode(&reqBody); err != nil {
+		returnError(w, "Invalid request payload", http.StatusBadRequest)
+		return
+	}
+
+	// Validate the request format
+	if err := validate.Struct(reqBody); err != nil {
+		returnError(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if reqBody.Status != Taken {
+		returnError(w, "Status is invalid", http.StatusNotAcceptable)
+		return
+	}
+	if err := c.dbm.TakeOrder(orderID, reqBody.Status); err != nil {
+		returnError(w, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	json.NewEncoder(w).Encode(TakeOrderRequestAndResponse{Status: "SUCCESS"})
 }
