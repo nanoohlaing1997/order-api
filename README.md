@@ -44,3 +44,13 @@ Order API backend with golang
 - **Method**: `GET`
 - **URL**: `/orders?page=:page&limit=:limit`
 - **Feature**: - Retrieves list of data base on page and limit values.
+
+## Library/Package
+
+- **validator** : To validate request format
+- **gorilla/muX** : For API routing
+- **gorm** : For object relational mapping to interact with database
+
+### API testing in insomnia
+
+- Import the `order-api.json` file into Insomnia to test the API.
