@@ -1,6 +1,7 @@
 package service
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -25,24 +26,24 @@ func GetDistance(origin, destination []string) (float64, error) {
 		var data map[string]interface{}
 
 		// testing
-		data = map[string]interface{}{
-			"rows": []interface{}{
-				map[string]interface{}{
-					"elements": []interface{}{
-						map[string]interface{}{
-							"distance": map[string]interface{}{
-								"value": 1235325101,
-							},
-						},
-					},
-				},
-			},
-		}
+		// data = map[string]interface{}{
+		// 	"rows": []interface{}{
+		// 		map[string]interface{}{
+		// 			"elements": []interface{}{
+		// 				map[string]interface{}{
+		// 					"distance": map[string]interface{}{
+		// 						"value": 1235325101,
+		// 					},
+		// 				},
+		// 			},
+		// 		},
+		// 	},
+		// }
 		//
 
-		// if err = json.NewDecoder(res.Body).Decode(&data); err != nil {
-		// 	return 0, err
-		// }
+		if err = json.NewDecoder(res.Body).Decode(&data); err != nil {
+			return 0, err
+		}
 
 		rows, ok := data["rows"].([]interface{})
 		if !ok || len(rows) == 0 {
