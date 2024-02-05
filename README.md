@@ -12,8 +12,10 @@ Order API backend with golang
 1. Clone the repository
 2. Copy `.env.example` to `.env`
 3. Modify the configuration in `.env` as you required
-4. Run `docker-compose up app`
-5. The application will be server on port `8080`
+4. Run `docker-compose up -d --build`
+5. Run `create_db.sh` to create the database (make sure your mysql image is up)
+6. Run `docker-compose up app` to start the application
+7. The application will be server on port `8080`
 
 ## Environment config
 
@@ -54,3 +56,8 @@ Order API backend with golang
 ### API testing in insomnia
 
 - Import the `order-api.json` file into Insomnia to test the API.
+
+## Unit Test
+
+- run `docker-compose exec app`
+- run `go test test\api_test.go` (**Make sure docker is up and database creation is complete**)

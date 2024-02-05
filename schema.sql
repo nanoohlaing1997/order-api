@@ -1,3 +1,6 @@
+CREATE DATABASE IF NOT EXISTS order_db;
+USE order_db;
+
 CREATE TABLE `orders` (
   `id` bigint(10) unsigned NOT NULL AUTO_INCREMENT,
   `distance` decimal(20, 5) NOT NULL,
