@@ -59,5 +59,5 @@ Order API backend with golang
 
 ## Unit Test
 
-- run `docker-compose exec app`
+- run `docker-compose exec app bash`
 - run `go test test\api_test.go` (**Make sure docker is up and database creation is complete**)
