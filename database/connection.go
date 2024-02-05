@@ -1,8 +1,6 @@
 package database
 
 import (
-	"os"
-
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -13,7 +11,6 @@ type DatabaseManager struct {
 
 func DBConn(conn string) *gorm.DB {
 	conn = conn + "?charset=utf8mb4&parseTime=True&loc=Local"
-
 	db, err := gorm.Open(mysql.Open(conn), &gorm.Config{})
 	if err != nil {
 		panic(err)
@@ -21,8 +18,8 @@ func DBConn(conn string) *gorm.DB {
 	return db
 }
 
-func NewDatabaseManager() *DatabaseManager {
+func NewDatabaseManager(dbName string) *DatabaseManager {
 	return &DatabaseManager{
-		OrderManager(DBConn(os.Getenv("ORDER_DB"))),
+		OrderManager(DBConn(dbName)),
 	}
 }

@@ -2,6 +2,7 @@ package database
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"gorm.io/gorm"
@@ -29,6 +30,18 @@ func OrderManager(db *gorm.DB) *OrderDB {
 		db:    db,
 		model: &Order{},
 	}
+}
+
+func (odb *OrderDB) Truncate() error {
+	query := fmt.Sprintf(
+		`TRUNCATE TABLE %s`, odb.model.TableName(),
+	)
+
+	if res := odb.db.Exec(query); res.Error != nil {
+		return res.Error
+	}
+
+	return nil
 }
 
 func (odb *OrderDB) CreateOrder(order *Order) (*Order, error) {

@@ -22,7 +22,7 @@ func main() {
 }
 
 func RegisterRoute() *mux.Router {
-	dbm := database.NewDatabaseManager()
+	dbm := database.NewDatabaseManager(os.Getenv("ORDER_DB"))
 	controller := api.NewControllerManager(dbm)
 
 	router := mux.NewRouter()

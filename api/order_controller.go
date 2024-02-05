@@ -98,10 +98,19 @@ func (c *Controller) TakeOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Validate the request json key
+	if reqBody.Status == "" {
+		returnError(w, "Invalid request payload", http.StatusBadRequest)
+		return
+	}
+
+	// Validate the request json value
 	if reqBody.Status != Taken {
 		returnError(w, "Status is invalid", http.StatusNotAcceptable)
 		return
 	}
+
+	// Taking order
 	if err := c.dbm.TakeOrder(orderID, reqBody.Status); err != nil {
 		returnError(w, err.Error(), http.StatusNotFound)
 		return
@@ -112,23 +121,27 @@ func (c *Controller) TakeOrder(w http.ResponseWriter, r *http.Request) {
 
 func (c *Controller) ListOrder(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
+	// Validate the request query of page
 	page, err := strconv.Atoi(vars["page"])
 	if err != nil {
 		returnError(w, "Page must be valid integer", http.StatusNotAcceptable)
 		return
 	}
 
+	// Validate the request query of limit
 	limit, err := strconv.Atoi(vars["limit"])
 	if err != nil {
 		returnError(w, "Limit must be valid integer", http.StatusNotAcceptable)
 		return
 	}
 
+	// Validate the value of request queries
 	if page < 0 || limit < 0 {
 		returnError(w, "Page and limit must be positive integer", http.StatusNotAcceptable)
 		return
 	}
 
+	// page and limit must start with 1 (default 1)
 	if page == 0 {
 		page = 1
 	}
@@ -137,6 +150,7 @@ func (c *Controller) ListOrder(w http.ResponseWriter, r *http.Request) {
 		limit = 1
 	}
 
+	// Retrieve list of order
 	orders, err := c.dbm.ListOrder(page, limit)
 	if err != nil {
 		returnError(w, err.Error(), http.StatusNotFound)
